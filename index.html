@@ -19,4 +19,37 @@
             <option value="random">Random (Mixed)</option>
         </select>
         <label for="questionCount">How many questions?</label>
-        <input type="num
+        <input type="number" id="questionCount" min="1" placeholder="e.g., 5">
+        <label for="difficulty">Choose Difficulty:</label>
+        <select id="difficulty">
+            <option value="30">Easy (30s)</option>
+            <option value="20">Medium (20s)</option>
+            <option value="10">Hard (10s)</option>
+            <option value="5">Legendary (5s)</option>
+        </select>
+        <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+    <div class="container" id="quizPage" style="display: none;">
+        <div id="quizArea"></div>
+        <div id="timer">Time Left: 30s</div>
+        <button id="nextBtn" onclick="nextQuestion()" style="display: none;">Next Question</button>
+        <button id="submitBtn" onclick="submitQuiz()" style="display: none;">Give Up</button>
+    </div>
+    <div class="container" id="endPage" style="display: none;">
+        <h2>🎉 Quiz Completed! 🎉</h2>
+        <div id="results"></div>
+        <div class="share-options">
+            <p>Share your score:</p>
+            <button class="share-btn x-btn" onclick="shareResults('x')">Share on X</button>
+            <button class="share-btn instagram-btn" onclick="shareResults('instagram')">Share on Instagram</button>
+            <button class="share-btn facebook-btn" onclick="shareResults('facebook')">Share on Facebook</button>
+            <div class="copy-link">
+                <input type="text" id="shareLink" readonly value="">
+                <button onclick="copyLink()">Copy Link</button>
+            </div>
+        </div>
+        <button onclick="restartQuiz()">Play Again</button>
+    </div>
+    <script src="/QuizSite/script.js"></script> <!-- Use root-relative path -->
+</body>
+</html>

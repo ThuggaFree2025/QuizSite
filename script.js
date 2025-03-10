@@ -164,14 +164,13 @@ function endQuiz() {
     document.getElementById("timer").style.display = "none"; // Hide timer on end page
 
     // Set the share link
-    const shareLink = "https://yourusername.github.io/random-quiz-site"; // Replace with your actual URL
+    const shareLink = "https://thuggafree2025.github.io/QuizSite"; // Use your actual URL
     document.getElementById("shareLink").value = shareLink;
 }
 
 function shareResults(platform) {
     const score = document.getElementById("results").textContent;
-    const shareText = encodeURIComponent(`I just scored ${score} on the Random Quiz Generator! Test yourself: https://yourusername.github.io/random-quiz-site`);
-    let url;
+    const shareText = encodeURIComponent(`I just scored ${score} on the Random Quiz Generator! Test yourself: https://thuggafree2025.github.io/QuizSite`);
 
     switch (platform) {
         case 'x':

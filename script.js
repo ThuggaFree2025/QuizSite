@@ -91,4 +91,117 @@ function displayQuestion() {
         quizArea.innerHTML = `
             <div class="question">
                 <p>${currentIndex + 1}. ${question.q}</p>
-        
+                ${question.options.map(opt => `
+                    <label>
+                        <input type="radio" name="q${currentIndex}" value="${opt}"> ${opt}
+                    </label><br>
+                `).join("")}
+            </div>
+        `;
+    }
+}
+
+function nextQuestion() {
+    const selected = document.querySelector(`input[name="q${currentIndex}"]:checked`);
+    if (selected) {
+        selectedQuestions[currentIndex].userAnswer = selected.value; // Store user answer
+    } else {
+        selectedQuestions[currentIndex].userAnswer = null; // No answer selected
+    }
+    currentIndex++;
+    if (currentIndex < selectedQuestions.length) {
+        displayQuestion();
+        resetTimer();
+    } else {
+        endQuiz();
+    }
+}
+
+function startTimer() {
+    clearInterval(timerInterval); // Clear any existing timer
+    document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = `Time Left: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            nextQuestion(); // Move to next question or end quiz
+        }
+    }, 1000);
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timeLeft = parseInt(document.getElementById("difficulty").value); // Reset to selected difficulty
+    startTimer();
+}
+
+function submitQuiz() {
+    const selected = document.querySelector(`input[name="q${currentIndex}"]:checked`);
+    if (selected) {
+        selectedQuestions[currentIndex].userAnswer = selected.value; // Store the last answer
+    } else {
+        selectedQuestions[currentIndex].userAnswer = null; // No answer selected
+    }
+    endQuiz();
+}
+
+function endQuiz() {
+    const quizPage = document.getElementById("quizPage");
+    const endPage = document.getElementById("endPage");
+    quizPage.style.display = "none";
+    endPage.style.display = "block";
+    clearInterval(timerInterval); // Stop the timer
+    let score = 0;
+
+    selectedQuestions.forEach((question, index) => {
+        if (question.userAnswer === question.a) {
+            score++;
+        }
+    });
+
+    document.getElementById("results").innerHTML = `You scored ${score}/${selectedQuestions.length}!`;
+    document.getElementById("timer").style.display = "none"; // Hide timer on end page
+
+    // Set the share link
+    const shareLink = "https://thuggafree2025.github.io/QuizSite"; // Use your actual URL
+    document.getElementById("shareLink").value = shareLink;
+}
+
+function shareResults(platform) {
+    const score = document.getElementById("results").textContent;
+    const shareText = encodeURIComponent(`I just scored ${score} on the Random Quiz Generator! Test yourself: https://thuggafree2025.github.io/QuizSite`);  
+
+    switch (platform) {
+        case 'x':
+            url = `https://twitter.com/intent/tweet?text=${shareText}`;
+            break;
+        case 'facebook':
+            url = `https://www.facebook.com/sharer/sharer.php?u=https://yourusername.github.io/random-quiz-site&quote=${shareText}`;
+            break;
+        case 'instagram':
+            // Instagram doesn't support direct sharing via URL, so we'll prompt to copy the text
+            navigator.clipboard.writeText(`I just scored ${score} on the Random Quiz Generator! Test yourself: https://yourusername.github.io/random-quiz-site`);
+            alert("Instagram doesn't support direct sharing. The share text has been copied to your clipboard. Paste it into your Instagram post!");
+            return;
+    }
+
+    window.open(url, '_blank');
+}
+
+function copyLink() {
+    const shareLink = document.getElementById("shareLink");
+    shareLink.select();
+    navigator.clipboard.writeText(shareLink.value);
+    alert("Link copied to clipboard!");
+}
+
+function restartQuiz() {
+    const endPage = document.getElementById("endPage");
+    const startPage = document.getElementById("startPage");
+    endPage.style.display = "none";
+    startPage.style.display = "block";
+    document.getElementById("timer").style.display = "block"; // Reset timer visibility
+    currentIndex = 0;
+    selectedQuestions = []; // Clear the questions array
+}
